@@ -1,0 +1,1812 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>مرجع العبارات الإنجليزية اليومية</title>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const {
+  useState
+} = React;
+const categories = [{
+  id: "greetings",
+  label: "Greetings",
+  icon: "👋",
+  color: "#4F86C6",
+  phrases: [{
+    phrase: "How's it going?",
+    literal: "كيف يسير الأمر؟",
+    meaning: "كيف حالك؟ / كيف أمورك؟",
+    when: "تحية يومية مع الأصدقاء، بديل شائع لـ How are you؟",
+    example: "Hey Ali! How's it going?",
+    translation: "أهلاً علي! كيف أمورك؟",
+    formality: "غير رسمي",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "What's up?",
+    literal: "ما هو الأعلى؟",
+    meaning: "ما الجديد؟ / شو في ما في؟",
+    when: "تحية سريعة جدًا بين الشباب والأصدقاء",
+    example: "What's up, bro? Long time no see.",
+    translation: "ما الجديد يا أخي؟ لم أرك منذ فترة.",
+    formality: "غير رسمي",
+    level: "A2",
+    note: "أصلها سؤال عما يحدث حولك، لكنها تحوّلت إلى تحية سريعة فقط."
+  }, {
+    phrase: "Long time no see!",
+    literal: "وقت طويل لا رؤية!",
+    meaning: "لم أرَك منذ زمن طويل!",
+    when: "عند لقاء شخص لم تره منذ فترة طويلة",
+    example: "Oh Sarah! Long time no see, how are you?",
+    translation: "أوه سارة! لم أرك منذ فترة طويلة، كيف حالك؟",
+    formality: "غير رسمي",
+    level: "A2",
+    note: "عبارة أصلها من التأثير الصيني على الإنجليزية، وأصبحت شائعة جدًا كـ Idiom."
+  }, {
+    phrase: "How have you been?",
+    literal: "كيف كنتَ؟",
+    meaning: "كيف كانت أحوالك في الفترة الماضية؟",
+    when: "للسؤال عن أحوال شخص خلال فترة غياب",
+    example: "Hi Tom, how have you been since last month?",
+    translation: "مرحبًا توم، كيف كانت أحوالك منذ الشهر الماضي؟",
+    formality: "محايد",
+    level: "B1",
+    note: null
+  }, {
+    phrase: "Good to see you!",
+    literal: "جيد لرؤيتك!",
+    meaning: "سعيد برؤيتك / يسعدني لقاؤك!",
+    when: "للتعبير عن الفرح عند مقابلة شخص تعرفه مسبقًا",
+    example: "Good to see you again, Omar!",
+    translation: "سعيد برؤيتك مجددًا يا عمر!",
+    formality: "محايد",
+    level: "A2",
+    note: null
+  }],
+  top5: ["How's it going?", "What's up?", "Long time no see!", "Good to see you!", "How have you been?"]
+}, {
+  id: "daily",
+  label: "Daily Conversation",
+  icon: "💬",
+  color: "#5BAD72",
+  phrases: [{
+    phrase: "Never mind.",
+    literal: "لا تبالِ بالعقل.",
+    meaning: "انسَ الأمر / لا عليك.",
+    when: "عندما لا يُفهم كلامك أو لتسكين أمر بسيط",
+    example: "Never mind, I will fix it myself.",
+    translation: "لا عليك، سأصلحه بنفسي.",
+    formality: "محايد",
+    level: "A2",
+    note: "Mind تعني يهتم، أي 'لا تُعِر اهتمامًا' وليس معناها الحرفي عن العقل."
+  }, {
+    phrase: "Sounds good!",
+    literal: "يبدو أصواتًا جيدة!",
+    meaning: "فكرة ممتازة! / موافق!",
+    when: "للرد بالموافقة السريعة على اقتراح أو خطة",
+    example: "Let's meet at 5 PM. — Sounds good!",
+    translation: "لنلتقِ في الخامسة. — فكرة ممتازة!",
+    formality: "غير رسمي",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "By the way…",
+    literal: "بجانب الطريق…",
+    meaning: "بالمناسبة… / على فكرة…",
+    when: "للانتقال إلى موضوع جديد أثناء الحديث",
+    example: "By the way, did you call Sam?",
+    translation: "بالمناسبة، هل اتصلت بسام؟",
+    formality: "محايد",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "It's up to you.",
+    literal: "إنه صاعد إليك.",
+    meaning: "القرار يعود لك / كما تحب.",
+    when: "لترك خيار التحديد أو الشراء للشخص الآخر",
+    example: "Pizza or burger? — It's up to you.",
+    translation: "بيتزا أم برجر؟ — القرار يعود لك.",
+    formality: "محايد",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "To be honest…",
+    literal: "لأكون صادقًا…",
+    meaning: "في الحقيقة / بصراحة…",
+    when: "عند تقديم رأي صريح أو إخبار بحقيقة معينة",
+    example: "To be honest, I don't like this movie.",
+    translation: "بصراحة، لا يعجبني هذا الفيلم.",
+    formality: "محايد وغير رسمي",
+    level: "B1",
+    note: null
+  }],
+  top5: ["Never mind.", "Sounds good!", "By the way…", "It's up to you.", "To be honest…"]
+}, {
+  id: "school",
+  label: "School & Study",
+  icon: "📚",
+  color: "#9B59B6",
+  phrases: [{
+    phrase: "Make sense",
+    literal: "يصنع حسًا.",
+    meaning: "منطقي / مفهوم.",
+    when: "للتعبير عن أن الشرح أو الكلام مفهوم ومعقول",
+    example: "Does this lesson make sense?",
+    translation: "هل هذا الدرس مفهوم؟",
+    formality: "محايد",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "Hit the books",
+    literal: "اضرب الكتب.",
+    meaning: "يبدأ المذاكرة بجد.",
+    when: "قبل الامتحانات، للتعبير عن التركيز في الدراسة",
+    example: "I have an exam tomorrow, I need to hit the books.",
+    translation: "لدي امتحان غدًا، يجب أن أبدأ المذاكرة بجد.",
+    formality: "غير رسمي",
+    level: "B1",
+    note: "مجاز يعبّر عن فتح الكتب بقوة لبدء الدراسة، وليس ضربها فعليًا."
+  }, {
+    phrase: "Catch up on",
+    literal: "يمسك فوق.",
+    meaning: "يعوّض ما فاته من دروس.",
+    when: "عند الغياب عن الدراسة ومحاولة إنجاز الواجبات الفائتة",
+    example: "I missed class, so I need to catch up.",
+    translation: "لقد غبت عن الدرس، لذا أحتاج لمواكبة ما فاتني.",
+    formality: "محايد",
+    level: "B1",
+    note: null
+  }, {
+    phrase: "Pass with flying colors",
+    literal: "ينجح بألوان طائرة.",
+    meaning: "ينجح بتفوق باهر / بدرجات عالية.",
+    when: "عند اجتياز اختبار بنجاح ساحق",
+    example: "She passed the test with flying colors.",
+    translation: "لقد اجتازت الاختبار بتفوق باهر.",
+    formality: "محايد",
+    level: "B1",
+    note: "أصلها بحري؛ فالسفن المنتصرة كانت ترفع أعلامها (colors) عاليًا."
+  }, {
+    phrase: "Pull an all-nighter",
+    literal: "يسحب ليلة كاملة.",
+    meaning: "يسهر الليل بطوله للدراسة.",
+    when: "عند البقاء مستيقظًا طوال الليل للمذاكرة قبل الاختبار",
+    example: "I pulled an all-nighter to finish my project.",
+    translation: "سهرت الليل بطوله لأنهي مشروعي.",
+    formality: "غير رسمي",
+    level: "B1",
+    note: null
+  }],
+  top5: ["Make sense", "Hit the books", "Catch up on", "Pass with flying colors", "Pull an all-nighter"]
+}, {
+  id: "work",
+  label: "Work",
+  icon: "💼",
+  color: "#34495E",
+  phrases: [{
+    phrase: "Get back to you",
+    literal: "يعود خلفًا لـ.",
+    meaning: "يعاود الاتصال أو الرد لاحقًا.",
+    when: "عندما تطلب وقتًا للبحث أو التفكير قبل الرد على زميل",
+    example: "I will check the files and get back to you.",
+    translation: "سأفحص الملفات وأعاود الرد عليك.",
+    formality: "محايد ورسمي خفيف",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "Call it a day",
+    literal: "تسميته يومًا.",
+    meaning: "إنهاء العمل لهذا اليوم / الاكتفاء به.",
+    when: "عندما تقرر التوقف عن العمل والعودة للمنزل",
+    example: "We are tired, let's call it a day.",
+    translation: "لقد تعبنا، لنكتفِ بهذا القدر اليوم.",
+    formality: "غير رسمي",
+    level: "B1",
+    note: null
+  }, {
+    phrase: "Behind schedule",
+    literal: "خلف الجدول الزمني.",
+    meaning: "متأخر عن الموعد المحدد.",
+    when: "للتعبير عن التأخر في تسليم عمل أو مشروع",
+    example: "Our project is two days behind schedule.",
+    translation: "مشروعنا متأخر يومين عن الجدول المحدد.",
+    formality: "رسمي",
+    level: "B1",
+    note: null
+  }, {
+    phrase: "In the loop",
+    literal: "داخل الحلقة.",
+    meaning: "على اطلاع بالتفاصيل / في الصورة.",
+    when: "للتأكيد على إبقاء شخص مطلعًا على التحديثات",
+    example: "Please keep me in the loop regarding this task.",
+    translation: "يرجى إبقائي في الصورة بشأن هذه المهمة.",
+    formality: "رسمية عمل",
+    level: "B1",
+    note: "Loop تعني دائرة تبادل المعلومات، وليس حلقة فعلية."
+  }, {
+    phrase: "Touch base",
+    literal: "يلمس القاعدة.",
+    meaning: "يتواصل سريعًا لمتابعة المستجدات.",
+    when: "عند إجراء تواصل سريع مع زميل لمراجعة العمل",
+    example: "Let's touch base tomorrow morning.",
+    translation: "فلنتواصل سريعًا غدًا صباحًا لمتابعة المستجدات.",
+    formality: "رسمية عمل",
+    level: "B1",
+    note: "مستعارة من رياضة البيسبول، حيث يلمس اللاعب القاعدة لإثبات تواجده."
+  }],
+  top5: ["Get back to you", "Call it a day", "Behind schedule", "In the loop", "Touch base"]
+}, {
+  id: "help",
+  label: "Asking for Help",
+  icon: "🤝",
+  color: "#16A085",
+  phrases: [{
+    phrase: "Give me a hand",
+    literal: "أعطني يدًا.",
+    meaning: "ساعدني / مدّ لي يد العون.",
+    when: "لطلب مساعدة بدنية أو عمل سريعة",
+    example: "Can you give me a hand with this box?",
+    translation: "هل يمكنك مساعدتي في حمل هذا الصندوق؟",
+    formality: "غير رسمي ومحايد",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "Do me a favor",
+    literal: "افعل لي معروفًا.",
+    meaning: "اصنع معي معروفًا / اسدِ لي خدمة.",
+    when: "عند طلب خدمة محددة من شخص ما",
+    example: "Could you do me a favor and open the door?",
+    translation: "هل يمكن أن تسدي لي خدمة وتفتح الباب؟",
+    formality: "محايد",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "I'm stuck",
+    literal: "أنا عالق.",
+    meaning: "واجهت مشكلة ولا أستطيع الإكمال.",
+    when: "عندما تعجز عن حل مسألة أو إكمال واجب بمفردك",
+    example: "I'm stuck on this math question.",
+    translation: "أنا عالق في سؤال الرياضيات هذا.",
+    formality: "غير رسمي ومحايد",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "Spare a minute?",
+    literal: "توفير دقيقة؟",
+    meaning: "هل لديك دقيقة واحدة من وقتك؟",
+    when: "لطلب وقت قصير جدًا لمحادثة سريعة أو استفسار",
+    example: "Do you have a minute to spare?",
+    translation: "هل لديك دقيقة متفرغة؟",
+    formality: "محايد ورسمي خفيف",
+    level: "B1",
+    note: null
+  }, {
+    phrase: "I need some advice",
+    literal: "أحتاج بعض النصيحة.",
+    meaning: "أريد استشارتك / أحتاج نصيحة.",
+    when: "لطلب توجيه أو رأي في موقف أو قرار",
+    example: "I need some advice about my career.",
+    translation: "أحتاج بعض النصيحة بشأن مساري المهني.",
+    formality: "محايد",
+    level: "A2",
+    note: null
+  }],
+  top5: ["Give me a hand", "Do me a favor", "I'm stuck", "I need some advice", "Spare a minute?"]
+}, {
+  id: "opinions",
+  label: "Giving Opinions",
+  icon: "🗨️",
+  color: "#E67E22",
+  phrases: [{
+    phrase: "In my opinion…",
+    literal: "في رأيي…",
+    meaning: "حسب رأيي / أعتقد أن…",
+    when: "لتقديم رأيك الشخصي بوضوح وبطريقة مباشرة",
+    example: "In my opinion, this car is too expensive.",
+    translation: "في رأيي، هذه السيارة غالية جدًا.",
+    formality: "محايد ورسمي",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "If you ask me…",
+    literal: "إذا سألتني…",
+    meaning: "لو أردت رأيي… / في نظري…",
+    when: "عند إبداء رأيك الشخصي بصراحة",
+    example: "If you ask me, we should leave now.",
+    translation: "لو أردت رأيي، يجب أن نغادر الآن.",
+    formality: "غير رسمي",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "I feel like…",
+    literal: "أشعر كـ…",
+    meaning: "أشعر أن… / يبدو لي أن…",
+    when: "للتعبير عن انطباع شخصي غير جازم (شائعة جدًا)",
+    example: "I feel like it's going to rain today.",
+    translation: "أشعر أنها ستُمطر اليوم.",
+    formality: "غير رسمي وشائع",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "From my point of view…",
+    literal: "من نقطة رؤيتي…",
+    meaning: "من وجهة نظري…",
+    when: "لإظهار الزاوية التي تنظر منها للموضوع في النقاش",
+    example: "From my point of view, the plan is good.",
+    translation: "من وجهة نظري، الخطة جيدة.",
+    formality: "رسمي ومحايد",
+    level: "B1",
+    note: null
+  }, {
+    phrase: "As far as I'm concerned…",
+    literal: "بقدر ما أنا معني…",
+    meaning: "بالنسبة لي / بحدود رأيي…",
+    when: "عند تأكيد موقفك الشخصي حيال مسألة معينة",
+    example: "As far as I'm concerned, the job is done.",
+    translation: "بالنسبة لي، العمل قد انتهى.",
+    formality: "رسمي خفيف",
+    level: "B1",
+    note: null
+  }],
+  top5: ["In my opinion…", "If you ask me…", "I feel like…", "From my point of view…", "As far as I'm concerned…"]
+}, {
+  id: "agree",
+  label: "Agreeing & Disagreeing",
+  icon: "✅",
+  color: "#2980B9",
+  phrases: [{
+    phrase: "I completely agree",
+    literal: "أنا أتفق تمامًا.",
+    meaning: "أتفق معك كليًا / كلامك صحيح.",
+    when: "لإبداء التأييد الكامل لرأي قيل للتو",
+    example: "I completely agree with your choice.",
+    translation: "أتفق تمامًا مع اختيارك.",
+    formality: "محايد ورسمي",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "You can say that again!",
+    literal: "يمكنك قول ذلك مجددًا!",
+    meaning: "أوافقك بشدة! / معك كل الحق!",
+    when: "للتعبير عن الموافقة الشديدة جدًا",
+    example: "It's so hot today! — You can say that again!",
+    translation: "الطقس حار جدًا اليوم! — معك كل الحق!",
+    formality: "غير رسمي",
+    level: "B1",
+    note: "تعبير مجازي يطلب إعادة الكلام لشدة صحته، وليس طلبًا حقيقيًا للتكرار."
+  }, {
+    phrase: "I see your point, but…",
+    literal: "أرى نقطتك، ولكن…",
+    meaning: "أفهم وجهة نظرك، لكن…",
+    when: "للاعتراض المؤدب دون إحراج المتحدث",
+    example: "I see your point, but it's too risky.",
+    translation: "أفهم وجهة نظرك، لكن الأمر فيه مخاطرة.",
+    formality: "محايد ومؤدب",
+    level: "B1",
+    note: null
+  }, {
+    phrase: "I'm not so sure about that",
+    literal: "لست متأكدًا جدًا بشأن ذلك.",
+    meaning: "أشك في هذا الكلام / لست واثقًا.",
+    when: "للتعبير عن الشك أو الاختلاف الخفيف",
+    example: "He says it's easy, but I'm not so sure about that.",
+    translation: "يقول إنه سهل، لكني لست متأكدًا من ذلك.",
+    formality: "محايد",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "Tell me about it!",
+    literal: "أخبرني عن ذلك!",
+    meaning: "لا تذكرني! / أنا أعلم ذلك جيدًا!",
+    when: "للموافقة على شكوى لأنك عانيت منها أيضًا",
+    example: "Traffic is horrible today. — Tell me about it!",
+    translation: "الازدحام مرعب اليوم. — لا تذكرني، يعلم الله!",
+    formality: "غير رسمي",
+    level: "B1",
+    note: "لا تطلب معلومات بل تعني 'أنا أعرف هذه المعاناة مثلك تمامًا'."
+  }],
+  top5: ["I completely agree", "I'm not so sure about that", "I see your point, but…", "You can say that again!", "Tell me about it!"]
+}, {
+  id: "feelings",
+  label: "Feelings & Emotions",
+  icon: "❤️",
+  color: "#E74C3C",
+  phrases: [{
+    phrase: "Under the weather",
+    literal: "تحت الطقس.",
+    meaning: "متوعّك الصحة / مريض قليلاً.",
+    when: "للتعبير عن الإصابة بمرض خفيف كالصداع",
+    example: "I can't come today, I feel under the weather.",
+    translation: "لا أستطيع المجيء اليوم، أشعر أنني متوعك.",
+    formality: "محايد وغير رسمي",
+    level: "B1",
+    note: "أصلها بحري: النزول للأسفل تحت سطح السفينة تجنبًا للطقس السيئ عند الدوار."
+  }, {
+    phrase: "Over the moon",
+    literal: "فوق القمر.",
+    meaning: "طائر من الفرح / سعيد جدًا.",
+    when: "عند سماع خبر سار للغاية",
+    example: "He was over the moon when he got the job.",
+    translation: "كان طائرًا من الفرح عندما حصل على الوظيفة.",
+    formality: "غير رسمي",
+    level: "B1",
+    note: null
+  }, {
+    phrase: "Down in the dumps",
+    literal: "أسفل المزابل.",
+    meaning: "حزين جدًا / محبط ومكتئب.",
+    when: "للتعبير عن المزاج الكئيب والحزن",
+    example: "Why are you so down in the dumps today?",
+    translation: "لماذا أنت حزين ومكتئب هكذا اليوم؟",
+    formality: "غير رسمي",
+    level: "B1",
+    note: null
+  }, {
+    phrase: "On edge",
+    literal: "على الحافة.",
+    meaning: "متوتر / قلق للغاية.",
+    when: "عندما يكون الشخص قلقًا وسريع التوتر قبل حادث مهم",
+    example: "She is on edge before the exam.",
+    translation: "إنها متوترة للغاية قبل الامتحان.",
+    formality: "محايد",
+    level: "B1",
+    note: null
+  }, {
+    phrase: "Mixed feelings",
+    literal: "مشاعر مختلطة.",
+    meaning: "مشاعر متضاربة (فرح وخوف).",
+    when: "عندما لا تدري هل تفرح أم تحزن لقرار معين",
+    example: "I have mixed feelings about moving abroad.",
+    translation: "لدي مشاعر متضاربة بشأن الانتقال للخارج.",
+    formality: "محايد",
+    level: "A2",
+    note: null
+  }],
+  top5: ["Mixed feelings", "Under the weather", "Over the moon", "On edge", "Down in the dumps"]
+}, {
+  id: "encouragement",
+  label: "Encouragement",
+  icon: "💪",
+  color: "#27AE60",
+  phrases: [{
+    phrase: "Keep it up!",
+    literal: "أبقِها مرفوعة!",
+    meaning: "واصل التقدم! / استمر في هذا الأداء!",
+    when: "لتشجيع شخص يقوم بعمل ممتاز كي يستمر",
+    example: "Great job on the project! Keep it up!",
+    translation: "عمل رائع! واصل هذا التميز!",
+    formality: "محايد وتشجيعي",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "Hang in there!",
+    literal: "تعلّق هناك!",
+    meaning: "اصبر! / اصمد ولا تستسلم!",
+    when: "لتشجيع شخص يمر بظروف صعبة أو فترة جهد",
+    example: "Exams are hard, but hang in there!",
+    translation: "الامتحانات صعبة، لكن اصمد ولا تستسلم!",
+    formality: "غير رسمي",
+    level: "B1",
+    note: "استعارة من التمسك بحبل، تطالب بالصمود وعدم الانهيار."
+  }, {
+    phrase: "You got this!",
+    literal: "أنت حصلت على هذا!",
+    meaning: "أنت قادر على فعلها! / التوفيق حليفك!",
+    when: "لإعطاء الثقة لشخص قبل قيامه بمهمة صعبة",
+    example: "Don't worry about the interview, you got this!",
+    translation: "لا تقلق بشأن المقابلة، أنت قادر عليها!",
+    formality: "غير رسمي",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "Give it a shot!",
+    literal: "أعطِها رمية!",
+    meaning: "جرّب ولن تخسر شيئًا! / حاول!",
+    when: "للحث على تجربة شيء جديد دون خوف",
+    example: "You've never tried skiing? Give it a shot!",
+    translation: "لم تجرب التزلج من قبل؟ جرّب ولن تخسر!",
+    formality: "غير رسمي",
+    level: "B1",
+    note: null
+  }, {
+    phrase: "Don't give up!",
+    literal: "لا تعطِ للأعلى!",
+    meaning: "لا تستسلم!",
+    when: "لمنع شخص من الإحباط أو التوقف عن المحاولة",
+    example: "English is easy, don't give up!",
+    translation: "الإنجليزي سهل، لا تستسلم!",
+    formality: "محايد",
+    level: "A2",
+    note: null
+  }],
+  top5: ["Keep it up!", "You got this!", "Don't give up!", "Hang in there!", "Give it a shot!"]
+}, {
+  id: "travel",
+  label: "Travel",
+  icon: "✈️",
+  color: "#3498DB",
+  phrases: [{
+    phrase: "On the way",
+    literal: "على الطريق.",
+    meaning: "في الطريق / قادم الآن.",
+    when: "لإعلام الطرف الآخر أنك في طريقك إليه",
+    example: "I'm on the way to the airport.",
+    translation: "أنا في الطريق إلى المطار.",
+    formality: "محايد",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "Safe travels!",
+    literal: "رحلات آمنة!",
+    meaning: "رافقتك السلامة! / رحلة موفقة!",
+    when: "لتوديع شخص مسافر",
+    example: "Goodbye! Safe travels!",
+    translation: "وداعًا! رافقتك السلامة!",
+    formality: "محايد",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "Hit the road",
+    literal: "اضرب الطريق.",
+    meaning: "ينطلق في السفر / يبدأ الرحلة.",
+    when: "عند حزم الأمتعة والبدء بالقيادة والرحلة",
+    example: "We need to hit the road early tomorrow.",
+    translation: "يجب أن ننطلق في طريقنا باكرًا غدًا.",
+    formality: "غير رسمي",
+    level: "B1",
+    note: "تعبير مجازي يعني وضع إطارات السيارة على الطريق، وليس ضربه فعليًا."
+  }, {
+    phrase: "Check in / Check out",
+    literal: "يفحص داخلاً / خارجًا.",
+    meaning: "تسجيل الوصول / تسجيل المغادرة.",
+    when: "في إجراءات الفنادق والمطارات",
+    example: "We will check in at 2 PM.",
+    translation: "سنقوم بتسجيل الوصول في الثانية ظهرًا.",
+    formality: "رسمي ومحايد",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "Catch a flight",
+    literal: "يمسك رحلة طيران.",
+    meaning: "يلحق بالطائرة / يسافر جوًا.",
+    when: "عند التوجه للحاق بالمطار والطائرة في الموعد",
+    example: "I have to catch a flight at 8 AM.",
+    translation: "يجب أن ألحق بطائرتي في الثامنة صباحًا.",
+    formality: "محايد",
+    level: "A2",
+    note: null
+  }],
+  top5: ["On the way", "Safe travels!", "Check in / Check out", "Catch a flight", "Hit the road"]
+}, {
+  id: "shopping",
+  label: "Shopping",
+  icon: "🛍️",
+  color: "#D35400",
+  phrases: [{
+    phrase: "Out of stock",
+    literal: "خارج المخزون.",
+    meaning: "نفد من المخزن / غير متوفر.",
+    when: "عند السؤال عن منتج غير متوفر بالمتجر",
+    example: "Sorry, this shirt is out of stock.",
+    translation: "عذرًا، هذا القميص غير متوفر حاليًا.",
+    formality: "محايد ورسمي",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "On sale",
+    literal: "على البيع.",
+    meaning: "عليه تخفيض / معروض بخصم.",
+    when: "عند الشراء في فترة الخصومات والتخفيضات",
+    example: "These shoes are on sale today.",
+    translation: "هذا الحذاء عليه تخفيض اليوم.",
+    formality: "محايد",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "A rip-off",
+    literal: "تمزيق لأعلى.",
+    meaning: "سرقة علنية! (سعر مبالغ فيه جدًا).",
+    when: "عندما يكون سعر المنتج مرتفعًا بشكل غير عادل",
+    example: "50 dollars for coffee? That's a rip-off!",
+    translation: "50 دولارًا لقهوة؟ هذه سرقة علنية!",
+    formality: "غير رسمي جدًا",
+    level: "B1",
+    note: "Rip تعني يمزّق، والتعبير يشير إلى سلْب مالك بطريقة غير عادلة."
+  }, {
+    phrase: "Pay in cash / by card",
+    literal: "يدفع بالنقد / بالبطاقة.",
+    meaning: "الدفع نقدًا / بالبطاقة.",
+    when: "عند صندوق الدفع (الكاشير) في أي متجر",
+    example: "Can I pay by card?",
+    translation: "هل يمكنني الدفع بالبطاقة؟",
+    formality: "محايد",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "How much does this cost?",
+    literal: "كم يكلّف هذا؟",
+    meaning: "كم سعر هذا؟",
+    when: "للاستفسار الأساسي واليومي عن السعر",
+    example: "Excuse me, how much does this cost?",
+    translation: "لو سمحت، كم سعر هذا؟",
+    formality: "محايد",
+    level: "A2",
+    note: null
+  }],
+  top5: ["How much does this cost?", "Pay in cash / by card", "On sale", "Out of stock", "A rip-off"]
+}, {
+  id: "food",
+  label: "Food & Dining",
+  icon: "🍔",
+  color: "#F39C12",
+  phrases: [{
+    phrase: "Grab a bite",
+    literal: "يخطف قضمة.",
+    meaning: "يتناول وجبة سريعة.",
+    when: "عندما تقترح الذهاب للأكل بسرعة",
+    example: "Let's grab a bite before the movie.",
+    translation: "لنأكل وجبة سريعة قبل الفيلم.",
+    formality: "غير رسمي",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "I'm stuffed",
+    literal: "أنا محشو.",
+    meaning: "شبعت تمامًا / امتلأت معدتي.",
+    when: "بعد إنهاء وجبة دسمة والوصول لأقصى درجات الشبع",
+    example: "No more pizza for me, I'm stuffed.",
+    translation: "لا بيتزا أخرى لي، لقد شبعت تمامًا.",
+    formality: "غير رسمي",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "It's on me / My treat",
+    literal: "إنه عليّ / عزومتي.",
+    meaning: "الحساب عليّ / أنا من يدفع.",
+    when: "عند الإصرار على دفع فاتورة الطعام لأصدقائك",
+    example: "Put your money away, it's on me.",
+    translation: "أرجع نقودك، الحساب عليّ هذه المرة.",
+    formality: "غير رسمي ومحايد",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "Have a sweet tooth",
+    literal: "يملك سنًا حلوة.",
+    meaning: "يحب الحلويات والأطعمة السكرية.",
+    when: "عند إظهار شغفك بطلب الحلويات والشوكولاتة",
+    example: "I eat chocolate daily, I have a sweet tooth.",
+    translation: "آكل الشوكولاتة يوميًا، فأنا أعشق الحلويات.",
+    formality: "محايد وغير رسمي",
+    level: "B1",
+    note: "استعارة قديمة تصف الشهية بوجود سن خاصة بالحلوى، وليس سنًا فعلية."
+  }, {
+    phrase: "Ready to order?",
+    literal: "جاهز للطلب؟",
+    meaning: "هل أنتم جاهزون لطلب الطعام؟",
+    when: "يقولها النادل (Waiter) في المطعم لأخذ الطلب",
+    example: "Are you ready to order, sir?",
+    translation: "هل أنت جاهز لطلب الطعام يا سيدي؟",
+    formality: "رسمي خفيف ومحايد",
+    level: "A2",
+    note: null
+  }],
+  top5: ["Grab a bite", "I'm stuffed", "It's on me / My treat", "Ready to order?", "Have a sweet tooth"]
+}, {
+  id: "phone",
+  label: "Phone Conversations",
+  icon: "📱",
+  color: "#8E44AD",
+  phrases: [{
+    phrase: "Hold on a second",
+    literal: "امسك على ثانية.",
+    meaning: "انتظر لحظة / ابقَ معي.",
+    when: "لطلب انتظار قصير جدًا أثناء المكالمة",
+    example: "Hold on a second, someone is at the door.",
+    translation: "انتظر لحظة، هناك شخص على الباب.",
+    formality: "غير رسمي ومحايد",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "You're breaking up",
+    literal: "أنت تتكسّر.",
+    meaning: "صوتك يتقطّع / الشبكة سيئة.",
+    when: "عندما ينقطع صوت المتصل بسبب التغطية الضعيفة",
+    example: "Can you repeat that? You're breaking up.",
+    translation: "هل يمكنك إعادة ذلك؟ صوتك يتقطع.",
+    formality: "محايد",
+    level: "A2",
+    note: "Break up تصف تقطّع الصوت لأجزاء صغيرة، وليس تكسّر الشخص فعليًا."
+  }, {
+    phrase: "Call back",
+    literal: "ينادي خلفًا.",
+    meaning: "يعاود الاتصال هاتفيًا.",
+    when: "عندما تكون مشغولاً وتعد بالاتصال لاحقًا",
+    example: "I'm busy now, I will call you back later.",
+    translation: "أنا مشغول الآن، سأعاود الاتصال بك لاحقًا.",
+    formality: "محايد",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "Cut off",
+    literal: "يُقطع بعيدًا.",
+    meaning: "انقطعت المكالمة فجأة.",
+    when: "للتعبير عن انقطاع الاتصال الهاتفي فجأة",
+    example: "Sorry, we were cut off.",
+    translation: "عذرًا، لقد انقطعت المكالمة بيننا.",
+    formality: "محايد",
+    level: "B1",
+    note: null
+  }, {
+    phrase: "Speak up",
+    literal: "يتحدث لأعلى.",
+    meaning: "ارفع صوتك قليلاً.",
+    when: "عندما لا تسمع المتحدث جيدًا عبر الهاتف",
+    example: "Could you speak up a bit? I can't hear you.",
+    translation: "هل يمكنك رفع صوتك قليلاً؟ لا أستطيع سماعك.",
+    formality: "محايد",
+    level: "A2",
+    note: null
+  }],
+  top5: ["Hold on a second", "You're breaking up", "Call back", "Speak up", "Cut off"]
+}, {
+  id: "social",
+  label: "Internet & Social Media",
+  icon: "📲",
+  color: "#1ABC9C",
+  phrases: [{
+    phrase: "Go viral",
+    literal: "يذهب فيروسيًا.",
+    meaning: "ينتشر بسرعة فائقة على الإنترنت.",
+    when: "لوصف منشور أو فيديو أصبح حديث الساعة",
+    example: "His funny video went viral on TikTok.",
+    translation: "فيديوه المضحك انتشر بسرعة فائقة.",
+    formality: "غير رسمي وشائع",
+    level: "B1",
+    note: "شبّه انتشار الفيديو بانتشار الفيروس السريع بين الناس."
+  }, {
+    phrase: "Scroll through",
+    literal: "يلف خلال.",
+    meaning: "يتصفح بالتمرير للأعلى والأسفل.",
+    when: "عند استخدام تطبيقات إنستغرام وفيسبوك وتيك توك",
+    example: "I was scrolling through Instagram yesterday.",
+    translation: "كنت أتصفح إنستغرام بالأمس.",
+    formality: "محايد",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "DM me / Shoot a DM",
+    literal: "أطلق رسالة خاصة.",
+    meaning: "أرسل لي رسالة خاصة.",
+    when: "لطلب التواصل في الخاص على وسائل التواصل",
+    example: "If you have questions, just DM me.",
+    translation: "إذا كان لديك أسئلة، أرسل لي رسالة خاصة.",
+    formality: "غير رسمي (لغة تقنية)",
+    level: "A2",
+    note: null
+  }, {
+    phrase: "Stay tuned",
+    literal: "ابقَ مضبوطًا.",
+    meaning: "ترقبوا المزيد / ابقوا على اطلاع.",
+    when: "قبل الإعلان عن خبر أو فيديو جديد قريبًا",
+    example: "New video coming soon, stay tuned!",
+    translation: "فيديو جديد قادم قريبًا، ترقبوا!",
+    formality: "محايد وتسويقي",
+    level: "B1",
+    note: "أصلها ضبط محطة الراديو على التردد الصحيح."
+  }, {
+    phrase: "Drop a comment",
+    literal: "أسقط تعليقًا.",
+    meaning: "اترك تعليقًا.",
+    when: "لحث المتابعين على كتابة آرائهم تحت المنشور",
+    example: "Don't forget to drop a comment below.",
+    translation: "لا تنسَ ترك تعليق في الأسفل.",
+    formality: "غير رسمي ومحايد",
+    level: "A2",
+    note: null
+  }],
+  top5: ["Scroll through", "DM me / Shoot a DM", "Drop a comment", "Go viral", "Stay tuned"]
+}, {
+  id: "idioms",
+  label: "Common Idioms",
+  icon: "🎭",
+  color: "#C0392B",
+  phrases: [{
+    phrase: "Piece of cake",
+    literal: "قطعة من الكعك.",
+    meaning: "أمر غاية في السهولة / سهل جدًا.",
+    when: "لوصف مهمة أو امتحان بأنه بسيط للغاية",
+    example: "The English test was a piece of cake.",
+    translation: "اختبار اللغة الإنجليزية كان سهلاً للغاية.",
+    formality: "غير رسمي",
+    level: "A2",
+    note: "من المسابقات القديمة حيث كانت الكعكة جائزة تُمنح مقابل جهد بسيط."
+  }, {
+    phrase: "Break a leg",
+    literal: "اكسر ساقًا.",
+    meaning: "أتمنى لك التوفيق والنجاح!",
+    when: "لتمني الحظ السعيد لشخص قبل اختبار أو تقديم",
+    example: "You have a presentation today? Break a leg!",
+    translation: "لديك عرض تقديمي اليوم؟ أتمنى لك التوفيق!",
+    formality: "غير رسمي",
+    level: "B1",
+    note: "خرافة مسرحية قديمة تقول إن التمني المباشر بالتوفيق يجلب الحظ السيئ."
+  }, {
+    phrase: "Once in a blue moon",
+    literal: "مرة في القمر الأزرق.",
+    meaning: "نادرًا جدًا / في الحوادث النادرة.",
+    when: "لوصف حدث لا يتكرر إلا كل فترة طويلة",
+    example: "I eat fast food once in a blue moon.",
+    translation: "آكل الوجبات السريعة نادرًا جدًا.",
+    formality: "غير رسمي ومحايد",
+    level: "B1",
+    note: "ظاهرة فلكية نادرة الظهور يظهر فيها القمر الكامل الثاني في الشهر."
+  }, {
+    phrase: "Cost an arm and a leg",
+    literal: "يكلف ذراعًا وساقًا.",
+    meaning: "ثمنه باهظ جدًا / مكلف للغاية.",
+    when: "للتعبير عن ارتفاع سعر شيء بشكل خيالي",
+    example: "Buying that phone costs an arm and a leg.",
+    translation: "شراء ذلك الهاتف مكلف للغاية.",
+    formality: "غير رسمي",
+    level: "B1",
+    note: "تشبيه التكلفة الباهظة بالتضحية بأجزاء غالية من الجسد."
+  }, {
+    phrase: "Bite the bullet",
+    literal: "يعض الرصاصة.",
+    meaning: "يتحامل على نفسه ويواجه الموقف الصعب.",
+    when: "عندما تضطر لفعل شيء كريه أو صعب لا بد منه",
+    example: "I hate dentist visits, but I have to bite the bullet.",
+    translation: "أكره زيارة طبيب الأسنان، لكني مضطر لمواجهة الأمر.",
+    formality: "غير رسمي ومحايد",
+    level: "B2",
+    note: "كانت تُستخدم في الجراحة العسكرية القديمة ليتحمل المريض الألم دون تخدير."
+  }],
+  top5: ["Piece of cake", "Break a leg", "Once in a blue moon", "Cost an arm and a leg", "Bite the bullet"]
+}];
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function generateQuiz(cat) {
+  const questions = cat.phrases.map(p => {
+    const type = Math.random() < 0.5 ? "p2m" : "m2p";
+    const correct = type === "p2m" ? p.meaning : p.phrase;
+    const questionText = type === "p2m" ? p.phrase : p.meaning;
+    const others = cat.phrases.filter(x => x.phrase !== p.phrase);
+    const distractorPool = shuffleArray(others).slice(0, 3);
+    const distractors = distractorPool.map(o => type === "p2m" ? o.meaning : o.phrase);
+    const options = shuffleArray([correct, ...distractors]);
+    return {
+      type,
+      questionText,
+      correct,
+      options
+    };
+  });
+  return shuffleArray(questions);
+}
+function App() {
+  const [activeCategory, setActiveCategory] = useState(categories[0].id);
+  const [showTop5, setShowTop5] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [levelFilter, setLevelFilter] = useState("ALL");
+  const [quizMode, setQuizMode] = useState(false);
+  const [quizQuestions, setQuizQuestions] = useState([]);
+  const [quizIndex, setQuizIndex] = useState(0);
+  const [quizScore, setQuizScore] = useState(0);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [quizFinished, setQuizFinished] = useState(false);
+  const [showTranslator, setShowTranslator] = useState(false);
+  const [translatorDir, setTranslatorDir] = useState("ar-en");
+  const [translatorInput, setTranslatorInput] = useState("");
+  const [translatorResult, setTranslatorResult] = useState("");
+  const [translatorLoading, setTranslatorLoading] = useState(false);
+  const [translatorError, setTranslatorError] = useState(null);
+  const translateText = async () => {
+    if (!translatorInput.trim()) return;
+    setTranslatorLoading(true);
+    setTranslatorError(null);
+    setTranslatorResult("");
+    const sl = translatorDir === "ar-en" ? "ar" : "en";
+    const tl = translatorDir === "ar-en" ? "en" : "ar";
+    try {
+      // Primary: Google Translate's public web endpoint — no API key needed, CORS-enabled,
+      // works from any static site (perfect for GitHub Pages).
+      const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${tl}&dt=t&q=${encodeURIComponent(translatorInput)}`;
+      const response = await fetch(url);
+      if (!response.ok) throw new Error("google-failed");
+      const data = await response.json();
+      const translated = (data[0] || []).map(chunk => chunk[0]).join("");
+      if (!translated.trim()) throw new Error("empty-result");
+      setTranslatorResult(translated.trim());
+    } catch (err) {
+      try {
+        // Fallback: MyMemory Translation API — also free, keyless, CORS-enabled.
+        const langpair = `${sl}|${tl}`;
+        const url2 = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(translatorInput)}&langpair=${langpair}`;
+        const response2 = await fetch(url2);
+        const data2 = await response2.json();
+        const translated2 = data2 && data2.responseData && data2.responseData.translatedText;
+        if (translated2) {
+          setTranslatorResult(translated2);
+        } else {
+          throw new Error("mymemory-failed");
+        }
+      } catch (err2) {
+        setTranslatorError("تعذّر الاتصال بخدمة الترجمة حاليًا. تأكد من اتصالك بالإنترنت أو حاول بعد قليل.");
+      }
+    } finally {
+      setTranslatorLoading(false);
+    }
+  };
+  const swapTranslatorDirection = () => {
+    setTranslatorDir(d => d === "ar-en" ? "en-ar" : "ar-en");
+    setTranslatorInput(translatorResult);
+    setTranslatorResult(translatorInput);
+    setTranslatorError(null);
+  };
+  const currentCat = categories.find(c => c.id === activeCategory);
+  const startQuiz = () => {
+    setQuizQuestions(generateQuiz(currentCat));
+    setQuizIndex(0);
+    setQuizScore(0);
+    setSelectedOption(null);
+    setQuizFinished(false);
+    setQuizMode(true);
+  };
+  const exitQuiz = () => {
+    setQuizMode(false);
+    setSelectedOption(null);
+  };
+  const handleAnswer = option => {
+    if (selectedOption !== null) return;
+    setSelectedOption(option);
+    if (option === quizQuestions[quizIndex].correct) {
+      setQuizScore(s => s + 1);
+    }
+  };
+  const nextQuestion = () => {
+    if (quizIndex + 1 < quizQuestions.length) {
+      setQuizIndex(i => i + 1);
+      setSelectedOption(null);
+    } else {
+      setQuizFinished(true);
+    }
+  };
+  const filteredPhrases = currentCat.phrases.filter(p => {
+    const matchSearch = searchTerm === "" || p.phrase.toLowerCase().includes(searchTerm.toLowerCase()) || p.meaning.includes(searchTerm) || p.translation.includes(searchTerm);
+    const matchLevel = levelFilter === "ALL" || p.level === levelFilter;
+    return matchSearch && matchLevel;
+  });
+  const displayPhrases = showTop5 ? filteredPhrases.filter(p => currentCat.top5.includes(p.phrase)) : filteredPhrases;
+  const levelBadge = level => {
+    const colors = {
+      A2: "#27AE60",
+      B1: "#E67E22",
+      B2: "#E74C3C"
+    };
+    return /*#__PURE__*/React.createElement("span", {
+      style: {
+        background: colors[level] || "#888",
+        color: "#fff",
+        borderRadius: 6,
+        padding: "2px 8px",
+        fontSize: 11,
+        fontWeight: 700,
+        letterSpacing: 1
+      }
+    }, level);
+  };
+  const formalityBadge = formality => {
+    const isRo = formality.includes("رسمي") && !formality.includes("غير");
+    const isGhi = formality.includes("غير رسمي");
+    return /*#__PURE__*/React.createElement("span", {
+      style: {
+        background: isRo ? "#EBF5FB" : isGhi ? "#FEF9E7" : "#F4F6F7",
+        color: isRo ? "#1A5276" : isGhi ? "#9A7D0A" : "#555",
+        border: `1px solid ${isRo ? "#AED6F1" : isGhi ? "#F9E79F" : "#ccc"}`,
+        borderRadius: 6,
+        padding: "2px 7px",
+        fontSize: 11,
+        fontWeight: 600
+      }
+    }, formality);
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: "'Segoe UI', system-ui, Arial, sans-serif",
+      minHeight: "100vh",
+      background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
+      padding: 0,
+      direction: "rtl"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "rgba(255,255,255,0.05)",
+      backdropFilter: "blur(10px)",
+      borderBottom: "1px solid rgba(255,255,255,0.1)",
+      padding: "24px 20px 16px",
+      textAlign: "center"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 36,
+      marginBottom: 4
+    }
+  }, "🗣️"), /*#__PURE__*/React.createElement("h1", {
+    style: {
+      color: "#fff",
+      margin: "0 0 4px",
+      fontSize: 22,
+      fontWeight: 800,
+      letterSpacing: -0.5
+    }
+  }, "مرجع العبارات الإنجليزية اليومية"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: "rgba(255,255,255,0.6)",
+      margin: 0,
+      fontSize: 13
+    }
+  }, "للناطقين بالعربية — 15 فئة — مستوى A2 وB1"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8,
+      marginTop: 14,
+      justifyContent: "center",
+      flexWrap: "wrap"
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "text",
+    placeholder: "🔍 ابحث عن عبارة...",
+    value: searchTerm,
+    onChange: e => setSearchTerm(e.target.value),
+    style: {
+      padding: "8px 14px",
+      borderRadius: 20,
+      border: "1px solid rgba(255,255,255,0.2)",
+      background: "rgba(255,255,255,0.1)",
+      color: "#fff",
+      fontSize: 13,
+      width: 200,
+      outline: "none",
+      direction: "rtl"
+    }
+  }), /*#__PURE__*/React.createElement("select", {
+    value: levelFilter,
+    onChange: e => setLevelFilter(e.target.value),
+    style: {
+      padding: "8px 14px",
+      borderRadius: 20,
+      border: "1px solid rgba(255,255,255,0.2)",
+      background: "rgba(255,255,255,0.1)",
+      color: "#fff",
+      fontSize: 13,
+      outline: "none",
+      cursor: "pointer"
+    }
+  }, /*#__PURE__*/React.createElement("option", {
+    value: "ALL",
+    style: {
+      color: "#000"
+    }
+  }, "جميع المستويات"), /*#__PURE__*/React.createElement("option", {
+    value: "A2",
+    style: {
+      color: "#000"
+    }
+  }, "A2"), /*#__PURE__*/React.createElement("option", {
+    value: "B1",
+    style: {
+      color: "#000"
+    }
+  }, "B1"), /*#__PURE__*/React.createElement("option", {
+    value: "B2",
+    style: {
+      color: "#000"
+    }
+  }, "B2")), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setShowTop5(!showTop5),
+    style: {
+      padding: "8px 14px",
+      borderRadius: 20,
+      border: `1px solid ${showTop5 ? "#F1C40F" : "rgba(255,255,255,0.2)"}`,
+      background: showTop5 ? "#F1C40F" : "rgba(255,255,255,0.1)",
+      color: showTop5 ? "#000" : "#fff",
+      fontSize: 13,
+      fontWeight: 600,
+      cursor: "pointer",
+      transition: "all 0.2s"
+    }
+  }, "⭐ أهم 5 عبارات فقط"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => {
+      setShowTranslator(true);
+      setQuizMode(false);
+    },
+    style: {
+      padding: "8px 14px",
+      borderRadius: 20,
+      border: `1px solid ${showTranslator ? "#00BCD4" : "rgba(255,255,255,0.2)"}`,
+      background: showTranslator ? "#00BCD4" : "rgba(255,255,255,0.1)",
+      color: "#fff",
+      fontSize: 13,
+      fontWeight: 700,
+      cursor: "pointer",
+      transition: "all 0.2s"
+    }
+  }, "🔄 مترجم عراقي ↔ إنجليزي"))), showTranslator ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "20px 14px 40px",
+      maxWidth: 640,
+      margin: "0 auto"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "linear-gradient(135deg, #00BCD425, rgba(0,0,0,0.3))",
+      border: "1px solid #00BCD450",
+      borderRadius: 16,
+      padding: "18px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("h2", {
+    style: {
+      color: "#fff",
+      margin: 0,
+      fontSize: 17,
+      fontWeight: 700
+    }
+  }, "🔄 مترجم اللهجة العراقية ↔ الإنجليزية العامية"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setShowTranslator(false),
+    style: {
+      padding: "6px 14px",
+      borderRadius: 20,
+      border: "1px solid rgba(255,255,255,0.3)",
+      background: "rgba(255,255,255,0.1)",
+      color: "#fff",
+      fontSize: 12,
+      fontWeight: 600,
+      cursor: "pointer"
+    }
+  }, "✖ رجوع للعبارات")), /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: "rgba(255,255,255,0.55)",
+      fontSize: 12,
+      marginTop: 0,
+      marginBottom: 16,
+      lineHeight: 1.7
+    }
+  }, "اكتب جملتك بالعربي (ويقبل اللهجة العراقية العامية) أو بالإنجليزي، وراح تحصل على ترجمة فورية، بلا داعي تروح تفتح ChatGPT بموقع ثاني. الأداة تشتغل مباشرة من المتصفح بدون أي مفتاح API أو سيرفر خاص، فتقدر تنشرها كموقع مستقل على GitHub Pages وتشتغل عند طلابك مباشرة."), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 12,
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "8px 16px",
+      borderRadius: 10,
+      background: translatorDir === "ar-en" ? "#00BCD4" : "rgba(255,255,255,0.08)",
+      color: "#fff",
+      fontSize: 13,
+      fontWeight: 700
+    }
+  }, "🇮🇶 عربي / عراقي"), /*#__PURE__*/React.createElement("button", {
+    onClick: swapTranslatorDirection,
+    style: {
+      width: 38,
+      height: 38,
+      borderRadius: "50%",
+      border: "1px solid rgba(255,255,255,0.3)",
+      background: "rgba(255,255,255,0.1)",
+      color: "#fff",
+      fontSize: 16,
+      cursor: "pointer",
+      flexShrink: 0
+    },
+    title: "بدّل الاتجاه"
+  }, "⇄"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "8px 16px",
+      borderRadius: 10,
+      background: translatorDir === "en-ar" ? "#00BCD4" : "rgba(255,255,255,0.08)",
+      color: "#fff",
+      fontSize: 13,
+      fontWeight: 700
+    }
+  }, "🇬🇧 English")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: "rgba(255,255,255,0.4)",
+      fontSize: 11,
+      marginBottom: 6
+    }
+  }, translatorDir === "ar-en" ? "اكتب بالعربي أو العراقي 👇" : "Type in English 👇"), /*#__PURE__*/React.createElement("textarea", {
+    value: translatorInput,
+    onChange: e => setTranslatorInput(e.target.value),
+    placeholder: translatorDir === "ar-en" ? "مثال: شلونك اليوم، شتسوي؟" : "e.g. What's up, how have you been?",
+    rows: 3,
+    style: {
+      width: "100%",
+      padding: "12px 14px",
+      borderRadius: 12,
+      border: "1px solid rgba(255,255,255,0.2)",
+      background: "rgba(255,255,255,0.08)",
+      color: "#fff",
+      fontSize: 14,
+      outline: "none",
+      resize: "vertical",
+      direction: translatorDir === "ar-en" ? "rtl" : "ltr",
+      fontFamily: "inherit",
+      boxSizing: "border-box"
+    }
+  })), /*#__PURE__*/React.createElement("button", {
+    onClick: translateText,
+    disabled: translatorLoading || !translatorInput.trim(),
+    style: {
+      width: "100%",
+      padding: "13px",
+      borderRadius: 12,
+      border: "none",
+      background: translatorLoading ? "rgba(0,188,212,0.5)" : "#00BCD4",
+      color: "#fff",
+      fontSize: 14,
+      fontWeight: 700,
+      cursor: translatorLoading || !translatorInput.trim() ? "default" : "pointer",
+      marginBottom: 14
+    }
+  }, translatorLoading ? "⏳ جارِ الترجمة..." : "🔁 ترجم الآن"), translatorError && /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "rgba(231,76,60,0.15)",
+      border: "1px solid rgba(231,76,60,0.4)",
+      borderRadius: 10,
+      padding: "10px 12px",
+      color: "#F5B7B1",
+      fontSize: 12,
+      marginBottom: 12
+    }
+  }, translatorError), translatorResult && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: "rgba(255,255,255,0.4)",
+      fontSize: 11,
+      marginBottom: 6
+    }
+  }, translatorDir === "ar-en" ? "الترجمة الإنجليزية 👇" : "الترجمة العراقية 👇"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "rgba(0,0,0,0.25)",
+      border: "1px solid #00BCD450",
+      borderRadius: 12,
+      padding: "14px 16px",
+      color: "#fff",
+      fontSize: 15,
+      fontWeight: 600,
+      direction: translatorDir === "ar-en" ? "ltr" : "rtl",
+      textAlign: translatorDir === "ar-en" ? "left" : "right",
+      lineHeight: 1.8
+    }
+  }, translatorResult), /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: "rgba(255,255,255,0.35)",
+      fontSize: 10,
+      marginTop: 8,
+      marginBottom: 0,
+      lineHeight: 1.6
+    }
+  }, "💡 الترجمة عبر محرك ترجمة عام مجاني، فقد لا تكون دقيقة 100% مع بعض تعابير اللهجة العراقية الخاصة جدًا — راجعها دومًا قبل الاعتماد عليها.")))) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      overflowX: "auto",
+      padding: "12px 12px 0",
+      gap: 8,
+      scrollbarWidth: "none"
+    }
+  }, categories.map(cat => /*#__PURE__*/React.createElement("button", {
+    key: cat.id,
+    onClick: () => {
+      setActiveCategory(cat.id);
+      setShowTop5(false);
+      exitQuiz();
+    },
+    style: {
+      flexShrink: 0,
+      padding: "8px 14px",
+      borderRadius: 20,
+      border: `2px solid ${activeCategory === cat.id ? cat.color : "rgba(255,255,255,0.15)"}`,
+      background: activeCategory === cat.id ? cat.color : "rgba(255,255,255,0.07)",
+      color: "#fff",
+      fontSize: 12,
+      fontWeight: activeCategory === cat.id ? 700 : 400,
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      gap: 5,
+      transition: "all 0.2s",
+      whiteSpace: "nowrap"
+    }
+  }, /*#__PURE__*/React.createElement("span", null, cat.icon), /*#__PURE__*/React.createElement("span", null, cat.label)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "16px 12px 40px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "rgba(255,255,255,0.07)",
+      borderRadius: 14,
+      padding: "14px 18px",
+      marginBottom: 14,
+      borderRight: `4px solid ${currentCat.color}`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      flexWrap: "wrap",
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 26
+    }
+  }, currentCat.icon), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", {
+    style: {
+      color: "#fff",
+      margin: 0,
+      fontSize: 18,
+      fontWeight: 700
+    }
+  }, currentCat.label), /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: "rgba(255,255,255,0.5)",
+      margin: 0,
+      fontSize: 12
+    }
+  }, quizMode ? "وضع الاختبار" : `${displayPhrases.length} عبارة ${showTop5 ? "(الأهم)" : ""}`))), !quizMode ? /*#__PURE__*/React.createElement("button", {
+    onClick: startQuiz,
+    style: {
+      padding: "8px 16px",
+      borderRadius: 20,
+      border: "none",
+      background: currentCat.color,
+      color: "#fff",
+      fontSize: 13,
+      fontWeight: 700,
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      gap: 6
+    }
+  }, "🎯 اختبار هذه الفقرة") : /*#__PURE__*/React.createElement("button", {
+    onClick: exitQuiz,
+    style: {
+      padding: "8px 16px",
+      borderRadius: 20,
+      border: "1px solid rgba(255,255,255,0.3)",
+      background: "rgba(255,255,255,0.1)",
+      color: "#fff",
+      fontSize: 13,
+      fontWeight: 600,
+      cursor: "pointer"
+    }
+  }, "✖ إنهاء الاختبار"))), quizMode && quizQuestions.length > 0 && (quizFinished ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: `linear-gradient(135deg, ${currentCat.color}30, rgba(0,0,0,0.35))`,
+      border: `1px solid ${currentCat.color}60`,
+      borderRadius: 16,
+      padding: "30px 20px",
+      textAlign: "center"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 40,
+      marginBottom: 8
+    }
+  }, quizScore === quizQuestions.length ? "🏆" : quizScore >= quizQuestions.length / 2 ? "🎉" : "💪"), /*#__PURE__*/React.createElement("h3", {
+    style: {
+      color: "#fff",
+      margin: "0 0 6px",
+      fontSize: 20
+    }
+  }, "نتيجتك: ", quizScore, " / ", quizQuestions.length), /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: "rgba(255,255,255,0.6)",
+      fontSize: 13,
+      marginBottom: 20
+    }
+  }, quizScore === quizQuestions.length ? "ممتاز! أتقنت كل عبارات هذه الفقرة 👏" : quizScore >= quizQuestions.length / 2 ? "أداء جيد! راجع العبارات التي أخطأت بها." : "تحتاج مراجعة أكثر لهذه الفقرة، لا تستسلم!"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10,
+      justifyContent: "center",
+      flexWrap: "wrap"
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: startQuiz,
+    style: {
+      padding: "10px 20px",
+      borderRadius: 20,
+      border: "none",
+      background: currentCat.color,
+      color: "#fff",
+      fontSize: 13,
+      fontWeight: 700,
+      cursor: "pointer"
+    }
+  }, "🔄 إعادة الاختبار"), /*#__PURE__*/React.createElement("button", {
+    onClick: exitQuiz,
+    style: {
+      padding: "10px 20px",
+      borderRadius: 20,
+      border: "1px solid rgba(255,255,255,0.3)",
+      background: "rgba(255,255,255,0.1)",
+      color: "#fff",
+      fontSize: 13,
+      fontWeight: 600,
+      cursor: "pointer"
+    }
+  }, "📖 رجوع للعبارات"))) : /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "rgba(255,255,255,0.06)",
+      borderRadius: 16,
+      padding: "18px",
+      border: "1px solid rgba(255,255,255,0.08)",
+      borderTop: `3px solid ${currentCat.color}`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "rgba(255,255,255,0.5)",
+      fontSize: 12
+    }
+  }, "سؤال ", quizIndex + 1, " من ", quizQuestions.length), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#F1C40F",
+      fontSize: 12,
+      fontWeight: 700
+    }
+  }, "النقاط: ", quizScore)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: "100%",
+      height: 6,
+      background: "rgba(255,255,255,0.1)",
+      borderRadius: 3,
+      marginBottom: 18,
+      overflow: "hidden"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: `${quizIndex / quizQuestions.length * 100}%`,
+      height: "100%",
+      background: currentCat.color,
+      transition: "width 0.3s"
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 8,
+      color: "rgba(255,255,255,0.5)",
+      fontSize: 12
+    }
+  }, quizQuestions[quizIndex].type === "p2m" ? "❓ ما معنى هذه العبارة؟" : "❓ اختر العبارة الصحيحة لهذا المعنى:"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: `${currentCat.color}20`,
+      border: `1px solid ${currentCat.color}50`,
+      borderRadius: 12,
+      padding: "16px",
+      marginBottom: 18,
+      textAlign: "center"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: "#fff",
+      fontSize: quizQuestions[quizIndex].type === "p2m" ? 20 : 15,
+      fontWeight: 700,
+      direction: quizQuestions[quizIndex].type === "p2m" ? "ltr" : "rtl",
+      fontStyle: quizQuestions[quizIndex].type === "p2m" ? "italic" : "normal"
+    }
+  }, quizQuestions[quizIndex].type === "p2m" ? `"${quizQuestions[quizIndex].questionText}"` : quizQuestions[quizIndex].questionText)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 10
+    }
+  }, quizQuestions[quizIndex].options.map((opt, i) => {
+    const isSelected = selectedOption === opt;
+    const isCorrect = opt === quizQuestions[quizIndex].correct;
+    let bg = "rgba(255,255,255,0.07)";
+    let border = "1px solid rgba(255,255,255,0.15)";
+    if (selectedOption !== null) {
+      if (isCorrect) {
+        bg = "rgba(39,174,96,0.25)";
+        border = "1px solid #27AE60";
+      } else if (isSelected && !isCorrect) {
+        bg = "rgba(231,76,60,0.25)";
+        border = "1px solid #E74C3C";
+      }
+    }
+    const isEnglish = quizQuestions[quizIndex].type === "m2p";
+    return /*#__PURE__*/React.createElement("button", {
+      key: i,
+      onClick: () => handleAnswer(opt),
+      disabled: selectedOption !== null,
+      style: {
+        padding: "12px 14px",
+        borderRadius: 10,
+        background: bg,
+        border: border,
+        color: "#fff",
+        fontSize: isEnglish ? 14 : 13,
+        direction: isEnglish ? "ltr" : "rtl",
+        textAlign: isEnglish ? "left" : "right",
+        fontStyle: isEnglish ? "italic" : "normal",
+        cursor: selectedOption === null ? "pointer" : "default",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        transition: "all 0.2s"
+      }
+    }, /*#__PURE__*/React.createElement("span", null, isEnglish ? `"${opt}"` : opt), selectedOption !== null && isCorrect && /*#__PURE__*/React.createElement("span", null, "✅"), selectedOption !== null && isSelected && !isCorrect && /*#__PURE__*/React.createElement("span", null, "❌"));
+  })), selectedOption !== null && /*#__PURE__*/React.createElement("button", {
+    onClick: nextQuestion,
+    style: {
+      marginTop: 16,
+      width: "100%",
+      padding: "12px",
+      borderRadius: 10,
+      border: "none",
+      background: currentCat.color,
+      color: "#fff",
+      fontSize: 14,
+      fontWeight: 700,
+      cursor: "pointer"
+    }
+  }, quizIndex + 1 < quizQuestions.length ? "السؤال التالي ⬅" : "عرض النتيجة 🏁"))), !quizMode && (displayPhrases.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      color: "rgba(255,255,255,0.4)",
+      padding: 40,
+      fontSize: 14
+    }
+  }, "لا توجد عبارات مطابقة للبحث") : /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 12
+    }
+  }, displayPhrases.map((p, idx) => /*#__PURE__*/React.createElement("div", {
+    key: idx,
+    style: {
+      background: "rgba(255,255,255,0.06)",
+      borderRadius: 14,
+      padding: "16px",
+      border: "1px solid rgba(255,255,255,0.08)",
+      borderTop: `3px solid ${currentCat.color}`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "flex-start",
+      flexWrap: "wrap",
+      gap: 6,
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 18,
+      fontWeight: 800,
+      color: currentCat.color,
+      direction: "ltr",
+      fontStyle: "italic"
+    }
+  }, "\"", p.phrase, "\""), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 5
+    }
+  }, levelBadge(p.level), formalityBadge(p.formality), currentCat.top5.includes(p.phrase) && /*#__PURE__*/React.createElement("span", {
+    style: {
+      background: "#F1C40F",
+      color: "#000",
+      borderRadius: 6,
+      padding: "2px 7px",
+      fontSize: 11,
+      fontWeight: 700
+    }
+  }, "⭐ أساسي"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: "8px 12px",
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "rgba(0,0,0,0.2)",
+      borderRadius: 8,
+      padding: "8px 10px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: "rgba(255,255,255,0.4)",
+      fontSize: 10,
+      marginBottom: 2
+    }
+  }, "ترجمة حرفية"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: "rgba(255,255,255,0.7)",
+      fontSize: 12
+    }
+  }, p.literal)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "rgba(0,0,0,0.2)",
+      borderRadius: 8,
+      padding: "8px 10px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: "rgba(255,255,255,0.4)",
+      fontSize: 10,
+      marginBottom: 2
+    }
+  }, "المعنى الحقيقي"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: "#fff",
+      fontSize: 13,
+      fontWeight: 600
+    }
+  }, p.meaning))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "rgba(255,255,255,0.04)",
+      borderRadius: 8,
+      padding: "8px 10px",
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "rgba(255,255,255,0.4)",
+      fontSize: 10
+    }
+  }, "⏰ متى تُستخدم؟  "), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "rgba(255,255,255,0.75)",
+      fontSize: 12
+    }
+  }, p.when)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: `${currentCat.color}18`,
+      border: `1px solid ${currentCat.color}40`,
+      borderRadius: 10,
+      padding: "10px 12px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: "rgba(255,255,255,0.4)",
+      fontSize: 10,
+      marginBottom: 4
+    }
+  }, "💬 مثال"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: "#fff",
+      fontSize: 13,
+      fontWeight: 600,
+      direction: "ltr",
+      textAlign: "left",
+      marginBottom: 4,
+      fontStyle: "italic"
+    }
+  }, p.example), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: "rgba(255,255,255,0.65)",
+      fontSize: 12,
+      borderTop: "1px solid rgba(255,255,255,0.1)",
+      paddingTop: 6,
+      marginTop: 4
+    }
+  }, p.translation)), p.note && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 8,
+      background: "rgba(241,196,15,0.1)",
+      border: "1px solid rgba(241,196,15,0.3)",
+      borderRadius: 8,
+      padding: "7px 10px",
+      display: "flex",
+      gap: 7,
+      alignItems: "flex-start"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 14,
+      flexShrink: 0
+    }
+  }, "💡"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#F1C40F",
+      fontSize: 12
+    }
+  }, p.note)))))), !quizMode && !showTop5 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 20,
+      background: `linear-gradient(135deg, ${currentCat.color}25, rgba(0,0,0,0.3))`,
+      border: `1px solid ${currentCat.color}50`,
+      borderRadius: 14,
+      padding: "14px 16px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: "#F1C40F",
+      fontWeight: 700,
+      marginBottom: 10,
+      fontSize: 13
+    }
+  }, "⭐ أهم 5 عبارات يجب حفظها أولًا في هذه الفئة:"), currentCat.top5.map((phrase, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 10,
+      marginBottom: 6
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      background: currentCat.color,
+      color: "#fff",
+      borderRadius: "50%",
+      width: 22,
+      height: 22,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontSize: 11,
+      fontWeight: 700,
+      flexShrink: 0
+    }
+  }, i + 1), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#fff",
+      fontSize: 13,
+      direction: "ltr",
+      fontStyle: "italic",
+      fontWeight: 600
+    }
+  }, phrase)))))));
+}
+const rootEl = document.getElementById('root');
+ReactDOM.createRoot(rootEl).render(React.createElement(App));
+
+</script>
+</body>
+</html>
